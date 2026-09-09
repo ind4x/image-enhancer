@@ -2,9 +2,12 @@
 """
 Self-contained, zero-boilerplate neural image enhancer.
 Upscales and restores images to 4x resolution using Real-ESRGAN with automatic tiling.
+Supports both local image files and remote image URLs.
 """
 
 import sys
+import tempfile
+import urllib.parse
 import urllib.request
 from pathlib import Path
 import cv2
@@ -38,20 +41,43 @@ def infer_tile(model, tile_bgr: np.ndarray, device: torch.device) -> np.ndarray:
 
 
 def enhance_image(
-    input_path: str | Path,
+    input_target: str | Path,
     output_path: str | Path | None = None,
     tile_size: int = 512,
     tile_pad: int = 32,
 ) -> Path:
     """
-    Enhances an image to 4x resolution with seamless tiling to prevent OOM.
+    Enhances a local image or remote URL to 4x resolution with seamless tiling.
     """
-    input_path = Path(input_path)
-    if not input_path.exists():
-        raise FileNotFoundError(f"Input file not found: {input_path}")
+    target_str = str(input_target)
+    is_temp = False
+
+    # Handle remote URLs
+    if target_str.startswith("http://") or target_str.startswith("https://"):
+        parsed = urllib.parse.urlparse(target_str)
+        fname = Path(parsed.path).name or "remote_image.png"
+        if not Path(fname).suffix.lower() in [".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff"]:
+            fname += ".png"
+
+        temp_dir = Path(tempfile.gettempdir()) / "image_enchancer_temp"
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        local_input = temp_dir / fname
+        print(f"Downloading remote image from: {target_str}...")
+        req = urllib.request.Request(target_str, headers={"User-Agent": "Mozilla/5.0 ImageEnhancer/1.0"})
+        with urllib.request.urlopen(req) as resp, open(local_input, "wb") as f:
+            f.write(resp.read())
+        is_temp = True
+        display_stem = Path(fname).stem
+        display_suffix = Path(fname).suffix
+    else:
+        local_input = Path(input_target)
+        if not local_input.exists():
+            raise FileNotFoundError(f"Input file not found: {input_target}")
+        display_stem = local_input.stem
+        display_suffix = local_input.suffix
 
     if output_path is None:
-        output_path = input_path.parent / f"{input_path.stem}_enhanced{input_path.suffix}"
+        output_path = Path.cwd() / f"{display_stem}_enhanced{display_suffix}"
     else:
         output_path = Path(output_path)
 
@@ -63,9 +89,9 @@ def enhance_image(
     model.eval()
 
     # Read image (including alpha if present)
-    img = cv2.imread(str(input_path), cv2.IMREAD_UNCHANGED)
+    img = cv2.imread(str(local_input), cv2.IMREAD_UNCHANGED)
     if img is None:
-        raise ValueError(f"Could not decode image: {input_path}")
+        raise ValueError(f"Could not decode image: {local_input}")
 
     has_alpha = len(img.shape) == 3 and img.shape[2] == 4
     bgr = img[:, :, :3] if has_alpha else img
@@ -82,7 +108,6 @@ def enhance_image(
         upscaled_bgr = np.zeros((out_h, out_w, 3), dtype=np.float32)
         weight_canvas = np.zeros((out_h, out_w, 1), dtype=np.float32)
 
-        # Pre-compute 2D cosine blending window
         def make_weight(th: int, tw: int) -> np.ndarray:
             pad_px = tile_pad * scale
             wy, wx = np.ones(th, dtype=np.float32), np.ones(tw, dtype=np.float32)
@@ -127,12 +152,19 @@ def enhance_image(
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(output_path), final_img)
+
+    if is_temp and local_input.exists():
+        try:
+            local_input.unlink()
+        except Exception:
+            pass
+
     return output_path
 
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python enhance.py <input_image> [output_image]")
+        print("Usage: python enhance.py <input_image_or_url> [output_image]")
         sys.exit(1)
 
     inp = sys.argv[1]

@@ -9,7 +9,6 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.5.0",
-    "gradio>=6.26.0",
     "numpy>=2.5.2",
     "opencv-python-headless>=5.0.0.93",
     "pillow>=12.3.0",
@@ -21,7 +20,10 @@ dependencies = [
 ]
 
 [project.scripts]
-image-enchancer = "image_enchancer:main"
+image-enhance = "image_enchancer.cli:direct_main"
+image-enchance = "image_enchancer.cli:direct_main"
+image-enhancer = "image_enchancer.cli:main"
+image-enchancer = "image_enchancer.cli:main"
 
 [build-system]
 requires = ["uv_build>=0.12.3,<0.13.0"]

@@ -81,20 +81,30 @@ uv run python enhance.py samples/test_input.png output.png
 If you omit the output path, the script automatically saves the result next to
 the input image with the `_enhanced` suffix.
 
-### Using the web interface
+### Using the direct global command
 
-If you prefer an interactive interface with an upload button, live completion
-progress bar, and one-click download, launch the local web interface.
+Image Enhancer installs global shell commands (`image-enchance` and `image-enhance`)
+directly into your user path (`~/.local/bin/`).
 
-To start the web application:
+This lets you enhance any local file or remote image URL from any terminal
+directory:
 
 ```bash
-uv run image-enchancer ui
+# Enhance a local file
+image-enchance photo.jpg
+
+# Enhance a remote image URL directly
+image-enchance https://example.com/sample.png
 ```
 
-Then open your browser and navigate to `http://127.0.0.1:7860`. The interface
-lets you drop an image, watch real-time tile upscaling progress, and download the
-enhanced image at full resolution.
+Where the enhanced version is saved:
+- When you omit the destination path, the enhanced image is saved in your
+  **current working directory** (`pwd`) with `_enhanced` added to the filename
+  (for example, `./photo_enhanced.jpg`).
+- When you provide a destination argument, it saves exactly to that path or folder:
+  ```bash
+  image-enchance https://example.com/sample.png ./output.png
+  ```
 
 ## Verifying the installation
 

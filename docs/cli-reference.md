@@ -127,29 +127,35 @@ uv run image-enchancer models download realesrgan-anime
 Downloaded weights reside in `~/.cache/image-enchancer/models/` or the local
 `./models/` directory.
 
-## The ui command
+## The image-enchance direct command
 
-The `ui` command starts the interactive Gradio web application with an upload
-interface, live completion progress bar, and direct download buttons.
+The `image-enchance` (and `image-enhance`) command provides a streamlined,
+single-command entry point that operates on local paths or remote URLs.
 
 ```bash
-uv run image-enchancer ui [options]
+image-enchance <target> [output_path] [options]
 ```
+
+`<target>` can be a local image path, a directory, or an HTTP/HTTPS image URL.
 
 ### Options
 
 | Option | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `--port` | Integer | `7860` | Port to bind the web server. |
-| `--host` | String | `127.0.0.1` | Network interface to bind. |
+| `-m, --model` | String | `realesrgan-x4plus` | Preset model key or path to weights. |
+| `-s, --scale` | Float | Model native (4.0) | Target upscale multiplier. |
+| `--face-restore / --no-face-restore` | Flag | `True` | Enables or disables GFPGAN face restoration. |
+| `--anime` | Flag | `False` | Shortcut for anime mode (`realesrgan-anime` with no face restoration). |
 
-### Example
+### Output destination
 
-To launch the web interface on port 8080:
-
-```bash
-uv run image-enchancer ui --port 8080
-```
+When you run `image-enchance`:
+- **Without an output argument:** The enhanced file is saved directly in the
+  current working directory from which you invoked the command (`pwd`), using
+  the pattern `<stem>_enhanced.<ext>`. The terminal prints the absolute path
+  (`Saved: /path/to/...`) upon completion.
+- **With an explicit destination:** If you provide a second argument, the output
+  is written to that exact file path or directory.
 
 ## Next steps
 

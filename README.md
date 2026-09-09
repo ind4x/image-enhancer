@@ -63,16 +63,21 @@ If you want a lightweight solution without subcommands:
 uv run python enhance.py input.jpg output.png
 ```
 
-### 4. Launch the web interface
+### 4. Direct global command (Local path or URL)
 
-To use the interactive web interface with an upload area, completion progress bar,
-and direct file download:
+You can run `image-enchance` (or `image-enhance`) directly from any terminal
+directory on local files or remote URLs:
 
 ```bash
-uv run image-enchancer ui
+# Enhance a local file
+image-enchance photo.jpg
+
+# Enhance a remote image URL
+image-enchance https://example.com/picture.png
 ```
 
-Then open `http://127.0.0.1:7860` in your web browser.
+By default, the enhanced image is saved directly into your **current working directory**
+with `_enhanced` appended to the filename.
 
 ## Documentation
 
