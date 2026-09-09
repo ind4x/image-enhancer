@@ -1,0 +1,41 @@
+[project]
+name = "image-enchancer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Youssef Fellah", email = "fellahyoussef010@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.5.0",
+    "numpy>=2.5.2",
+    "opencv-python-headless>=5.0.0.93",
+    "pillow>=12.3.0",
+    "rich>=15.0.0",
+    "spandrel>=0.4.2",
+    "torch>=2.14.0",
+    "torchvision>=0.29.0",
+    "tqdm>=4.70.0",
+]
+
+[project.scripts]
+image-enchancer = "image_enchancer:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
