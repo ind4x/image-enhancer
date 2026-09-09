@@ -159,6 +159,16 @@ def enhance_image(
         except Exception:
             pass
 
+    # Send desktop notification with thumbnail
+    try:
+        import subprocess
+        subprocess.run(
+            ["notify-send", "Image Enhancement Complete", f"{output_path.name} saved ({w*scale}x{h*scale})", "-i", str(output_path), "--app-name=Image Enhancer"],
+            check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+    except Exception:
+        pass
+
     return output_path
 
 

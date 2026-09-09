@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 import tempfile
 import urllib.parse
@@ -20,6 +21,17 @@ console = Console()
 def is_url(target: str) -> bool:
     """Checks whether a string target represents an HTTP or HTTPS URL."""
     return target.startswith("http://") or target.startswith("https://")
+
+
+def send_desktop_notification(title: str, message: str, icon_path: Optional[str] = None):
+    """Sends a desktop notification using notify-send with an optional image thumbnail."""
+    try:
+        cmd = ["notify-send", title, message, "--app-name=Image Enhancer"]
+        if icon_path and Path(icon_path).exists():
+            cmd.extend(["-i", str(icon_path)])
+        subprocess.run(cmd, check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception:
+        pass
 
 
 def fetch_source_image(target: str) -> Tuple[Path, str, bool]:
@@ -104,6 +116,8 @@ def cli():
               help="Edge-preserving high-frequency unsharp masking strength (0.0 to disable).")
 @click.option("--color-match/--no-color-match", default=True, show_default=True,
               help="Enforce statistical color distribution matching against input image.")
+@click.option("--notify/--no-notify", default=True, show_default=True,
+              help="Send desktop notification with image thumbnail upon completion.")
 @click.option("--device", type=str, default=None,
               help="Compute device ('cpu', 'cuda', etc.). Defaults to auto-detection.")
 def enhance(
@@ -119,6 +133,7 @@ def enhance(
     clarity: float,
     sharpen: float,
     color_match: bool,
+    notify: bool,
     device: Optional[str],
 ):
     """Enhance a local image, directory, or remote image URL to maximum quality."""
@@ -135,6 +150,7 @@ def enhance(
         clarity=clarity,
         sharpen=sharpen,
         color_match=color_match,
+        notify=notify,
         device=device,
     )
 
@@ -152,6 +168,7 @@ def run_enhance_pipeline(
     clarity: float = 1.2,
     sharpen: float = 0.35,
     color_match: bool = True,
+    notify: bool = True,
     device: Optional[str] = None,
 ):
     """Underlying orchestrator for both structured and direct CLI invocations."""
@@ -247,6 +264,14 @@ def run_enhance_pipeline(
                     f"{telemetry['elapsed_seconds']:.2f}s",
                 )
                 console.print(f"[bold green]Saved:[/] {dest_file.resolve()}")
+
+                # Trigger desktop notification
+                if notify:
+                    send_desktop_notification(
+                        title="Image Enhancement Complete",
+                        message=f"{dest_file.name} ({w_out}x{h_out}) saved in {telemetry['elapsed_seconds']:.1f}s",
+                        icon_path=str(dest_file),
+                    )
             except Exception as ex:
                 console.print(f"[bold red]Error processing {display_name}:[/] {ex}")
             finally:
@@ -323,6 +348,8 @@ def download_preset_models(model_name: str):
               help="Enable/disable GFPGAN face restoration.")
 @click.option("--anime", is_flag=True, default=False,
               help="Shortcut for anime/digital art mode (--model realesrgan-anime --no-face-restore).")
+@click.option("--notify/--no-notify", default=True, show_default=True,
+              help="Send desktop notification with image thumbnail upon completion.")
 def direct_main_command(
     target: str,
     output: Optional[Path],
@@ -330,6 +357,7 @@ def direct_main_command(
     scale: Optional[float],
     face_restore: bool,
     anime: bool,
+    notify: bool,
 ):
     """
     Direct single-command image enhancer.
@@ -348,6 +376,7 @@ def direct_main_command(
         model=model,
         scale=scale,
         face_restore=face_restore,
+        notify=notify,
     )
 
 
