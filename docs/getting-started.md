@@ -81,6 +81,21 @@ uv run python enhance.py samples/test_input.png output.png
 If you omit the output path, the script automatically saves the result next to
 the input image with the `_enhanced` suffix.
 
+### Using the web interface
+
+If you prefer an interactive interface with an upload button, live completion
+progress bar, and one-click download, launch the local web interface.
+
+To start the web application:
+
+```bash
+uv run image-enchancer ui
+```
+
+Then open your browser and navigate to `http://127.0.0.1:7860`. The interface
+lets you drop an image, watch real-time tile upscaling progress, and download the
+enhanced image at full resolution.
+
 ## Verifying the installation
 
 We recommend running the automated test suite to confirm that your local

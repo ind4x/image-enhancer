@@ -127,6 +127,30 @@ uv run image-enchancer models download realesrgan-anime
 Downloaded weights reside in `~/.cache/image-enchancer/models/` or the local
 `./models/` directory.
 
+## The ui command
+
+The `ui` command starts the interactive Gradio web application with an upload
+interface, live completion progress bar, and direct download buttons.
+
+```bash
+uv run image-enchancer ui [options]
+```
+
+### Options
+
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--port` | Integer | `7860` | Port to bind the web server. |
+| `--host` | String | `127.0.0.1` | Network interface to bind. |
+
+### Example
+
+To launch the web interface on port 8080:
+
+```bash
+uv run image-enchancer ui --port 8080
+```
+
 ## Next steps
 
 - Read [Python API](python-api.md) to integrate these options programmatically.

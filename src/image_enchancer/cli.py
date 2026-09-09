@@ -202,6 +202,17 @@ def download_preset_models(model_name: str):
             console.print(f"[green]Successfully fetched {meta['filename']}[/]")
 
 
+@cli.command("ui")
+@click.option("--port", type=int, default=7860, show_default=True, help="Port to bind the web interface.")
+@click.option("--host", type=str, default="127.0.0.1", show_default=True, help="Host interface to bind.")
+def launch_ui(port: int, host: str):
+    """Launch the interactive web UI in your browser."""
+    from app import build_app
+    demo = build_app()
+    console.print(f"[bold green]Starting Image Enhancer Web UI on http://{host}:{port}[/]")
+    demo.launch(server_name=host, server_port=port, inbrowser=False)
+
+
 def main():
     cli()
 

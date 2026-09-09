@@ -63,6 +63,17 @@ If you want a lightweight solution without subcommands:
 uv run python enhance.py input.jpg output.png
 ```
 
+### 4. Launch the web interface
+
+To use the interactive web interface with an upload area, completion progress bar,
+and direct file download:
+
+```bash
+uv run image-enchancer ui
+```
+
+Then open `http://127.0.0.1:7860` in your web browser.
+
 ## Documentation
 
 Comprehensive guides and technical documentation are available in the
