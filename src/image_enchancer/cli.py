@@ -207,10 +207,17 @@ def download_preset_models(model_name: str):
 @click.option("--host", type=str, default="127.0.0.1", show_default=True, help="Host interface to bind.")
 def launch_ui(port: int, host: str):
     """Launch the interactive web UI in your browser."""
-    from app import build_app
+    from app import build_app, CUSTOM_CSS
+    import gradio as gr
     demo = build_app()
     console.print(f"[bold green]Starting Image Enhancer Web UI on http://{host}:{port}[/]")
-    demo.launch(server_name=host, server_port=port, inbrowser=False)
+    demo.launch(
+        server_name=host,
+        server_port=port,
+        inbrowser=False,
+        theme=gr.themes.Base(),
+        css=CUSTOM_CSS,
+    )
 
 
 def main():

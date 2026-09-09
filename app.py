@@ -213,7 +213,7 @@ def run_enhancement(
 
 def build_app() -> gr.Blocks:
     """Constructs the Gradio application UI layout."""
-    with gr.Blocks(title="Image Enhancer", css=CUSTOM_CSS, theme=gr.themes.Base()) as demo:
+    with gr.Blocks(title="Image Enhancer") as demo:
         gr.Markdown(
             """
             # Image Enhancer
@@ -330,7 +330,13 @@ def main():
     port = int(os.environ.get("PORT", 7860))
     app = build_app()
     print(f"Launching Image Enhancer Web UI on http://127.0.0.1:{port}")
-    app.launch(server_name="127.0.0.1", server_port=port, inbrowser=False)
+    app.launch(
+        server_name="127.0.0.1",
+        server_port=port,
+        inbrowser=False,
+        theme=gr.themes.Base(),
+        css=CUSTOM_CSS,
+    )
 
 
 if __name__ == "__main__":
