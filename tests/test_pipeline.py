@@ -84,3 +84,19 @@ def test_pipeline_end_to_end(tmp_path: Path):
     assert telemetry["original_dimensions"] == (80, 80)
     assert telemetry["output_dimensions"] == (320, 320)
     assert telemetry["effective_scale"] == 4.0
+
+
+def test_vulkan_availability():
+    """Verify Vulkan availability detection runs without exceptions."""
+    from image_enchancer.vulkan import is_vulkan_available
+    available = is_vulkan_available()
+    assert isinstance(available, bool)
+
+
+def test_pipeline_engine_config():
+    """Verify engine selection in pipeline configuration."""
+    config = EnhancementConfig(engine="cpu")
+    assert config.engine == "cpu"
+    pipeline = ImageEnhancementPipeline(config)
+    assert pipeline.config.engine == "cpu"
+

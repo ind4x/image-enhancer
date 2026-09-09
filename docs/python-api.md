@@ -54,6 +54,7 @@ class EnhancementConfig:
     clarity_strength: float = 1.2
     sharpen_strength: float = 0.35
     color_match: bool = True
+    engine: str = "auto"  # "auto", "vulkan", "cpu"
     device: Optional[str] = None
 ```
 
@@ -80,6 +81,9 @@ The following list outlines the purpose of each configuration field:
 - `sharpen_strength`: Edge-preserving unsharp mask weight.
 - `color_match`: Enforces Reinhard color transfer in CIELAB space to ensure the
   output matches the original input color profile.
+- `engine`: Compute backend selector (`"auto"`, `"vulkan"`, or `"cpu"`). When
+  set to `"auto"`, automatically engages the Vulkan GPU engine on Intel Iris Xe
+  when available, falling back to PyTorch CPU tiling seamlessly.
 - `device`: Device string (such as `"cpu"` or `"cuda"`). When omitted, Image
   Enhancer automatically selects CUDA if an NVIDIA GPU is available, or CPU
   otherwise.

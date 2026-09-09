@@ -38,6 +38,8 @@ default values, and descriptions.
 | `--clarity` | Float | `1.2` | CIELAB CLAHE clip limit. Set to `0.0` to disable. |
 | `--sharpen` | Float | `0.35` | Edge-preserving unsharp mask strength. Set to `0.0` to disable. |
 | `--color-match / --no-color-match` | Flag | `True` | Matches color distribution with the original input. |
+| `--engine` | String | `auto` | Processing engine (`auto`, `vulkan`, or `cpu`). |
+| `--notify / --no-notify` | Flag | `True` | Sends desktop notification with thumbnail upon completion. |
 | `--device` | String | Auto-detected | Target compute device (`cpu` or `cuda`). |
 
 ### Examples
@@ -146,6 +148,8 @@ image-enchance <target> [output_path] [options]
 | `-s, --scale` | Float | Model native (4.0) | Target upscale multiplier. |
 | `--face-restore / --no-face-restore` | Flag | `True` | Enables or disables GFPGAN face restoration. |
 | `--anime` | Flag | `False` | Shortcut for anime mode (`realesrgan-anime` with no face restoration). |
+| `--engine` | String | `auto` | Processing engine (`auto`, `vulkan`, or `cpu`). |
+| `--notify / --no-notify` | Flag | `True` | Sends desktop notification with thumbnail upon completion. |
 
 ### Output destination
 

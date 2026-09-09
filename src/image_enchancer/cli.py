@@ -114,8 +114,8 @@ def cli():
               help="Luminance CLAHE micro-contrast enhancement strength (0.0 to disable).")
 @click.option("--sharpen", type=float, default=0.35, show_default=True,
               help="Edge-preserving high-frequency unsharp masking strength (0.0 to disable).")
-@click.option("--color-match/--no-color-match", default=True, show_default=True,
-              help="Enforce statistical color distribution matching against input image.")
+@click.option("--engine", type=click.Choice(["auto", "vulkan", "cpu"]), default="auto", show_default=True,
+              help="Processing engine. 'auto' chooses Vulkan GPU when available, 'cpu' forces PyTorch CPU.")
 @click.option("--notify/--no-notify", default=True, show_default=True,
               help="Send desktop notification with image thumbnail upon completion.")
 @click.option("--device", type=str, default=None,
@@ -133,6 +133,7 @@ def enhance(
     clarity: float,
     sharpen: float,
     color_match: bool,
+    engine: str,
     notify: bool,
     device: Optional[str],
 ):
@@ -150,6 +151,7 @@ def enhance(
         clarity=clarity,
         sharpen=sharpen,
         color_match=color_match,
+        engine=engine,
         notify=notify,
         device=device,
     )
@@ -168,6 +170,7 @@ def run_enhance_pipeline(
     clarity: float = 1.2,
     sharpen: float = 0.35,
     color_match: bool = True,
+    engine: str = "auto",
     notify: bool = True,
     device: Optional[str] = None,
 ):
@@ -183,6 +186,7 @@ def run_enhance_pipeline(
         clarity_strength=clarity,
         sharpen_strength=sharpen,
         color_match=color_match,
+        engine=engine,
         device=device,
     )
 
@@ -350,6 +354,8 @@ def download_preset_models(model_name: str):
               help="Enable/disable GFPGAN face restoration.")
 @click.option("--anime", is_flag=True, default=False,
               help="Shortcut for anime/digital art mode (--model realesrgan-anime --no-face-restore).")
+@click.option("--engine", type=click.Choice(["auto", "vulkan", "cpu"]), default="auto", show_default=True,
+              help="Processing engine ('auto', 'vulkan', 'cpu').")
 @click.option("--notify/--no-notify", default=True, show_default=True,
               help="Send desktop notification with image thumbnail upon completion.")
 def direct_main_command(
@@ -359,6 +365,7 @@ def direct_main_command(
     scale: Optional[float],
     face_restore: bool,
     anime: bool,
+    engine: str,
     notify: bool,
 ):
     """
@@ -378,6 +385,7 @@ def direct_main_command(
         model=model,
         scale=scale,
         face_restore=face_restore,
+        engine=engine,
         notify=notify,
     )
 

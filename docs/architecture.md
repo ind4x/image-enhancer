@@ -54,6 +54,20 @@ multiple model architectures:
 - **Transformers (HAT, DAT, SwinIR):** High-capacity attention models for
   complex structural reconstruction.
 
+### Hybrid Vulkan GPU and PyTorch execution
+
+To optimize throughput on modern hardware without requiring dedicated NVIDIA GPUs,
+Image Enhancer uses a hybrid acceleration architecture:
+
+- **Vulkan GPU engine:** For high-throughput super-resolution, the pipeline
+  dispatches neural inference to `realesrgan-ncnn-vulkan` running compiled FP16
+  compute shaders on integrated graphics (such as Intel Iris Xe). This offloads
+  the heaviest matrix calculations to the GPU while keeping host CPU cores free.
+- **PyTorch CPU engine:** The pipeline coordinates OpenCV DNN face detection,
+  `GFPGAN v1.4` blind face restoration, CIELAB CLAHE, and Reinhard color matching
+  on host CPU threads, passing image tensors between stages without disk I/O
+  bottlenecks.
+
 ## Memory-bounded seamless tiling
 
 Deep neural networks require substantial intermediate activation memory during
