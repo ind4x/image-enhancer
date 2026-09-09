@@ -218,7 +218,8 @@ def run_enhance_pipeline(
         if output_path is None:
             stem = Path(display_name).stem
             suffix = Path(display_name).suffix or ".png"
-            output_path = Path.cwd() / f"{stem}_enhanced{suffix}"
+            target_dir = local_path.parent.resolve() if not is_temp else Path.cwd()
+            output_path = target_dir / f"{stem}_enhanced{suffix}"
 
     results_table = Table(title="Processing Summary", show_header=True, header_style="bold magenta")
     results_table.add_column("Filename", style="dim")

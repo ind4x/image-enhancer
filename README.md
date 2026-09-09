@@ -69,8 +69,9 @@ To upscale a photograph with default 4x super-resolution and face restoration:
 image-enchance photo.jpg
 ```
 
-Image Enhancer saves the output file in your current working directory as
-`./photo_enhanced.jpg` and triggers a desktop notification when finished.
+Image Enhancer saves the output file in the same directory as the original
+image (or in the current working directory for remote web URLs) as
+`<stem>_enhanced.<ext>` and triggers a desktop notification when finished.
 
 #### 2. Enhance a remote web image
 

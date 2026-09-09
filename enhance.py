@@ -77,7 +77,8 @@ def enhance_image(
         display_suffix = local_input.suffix
 
     if output_path is None:
-        output_path = Path.cwd() / f"{display_stem}_enhanced{display_suffix}"
+        target_dir = local_input.parent.resolve() if not is_temp else Path.cwd()
+        output_path = target_dir / f"{display_stem}_enhanced{display_suffix}"
     else:
         output_path = Path(output_path)
 

@@ -154,10 +154,10 @@ image-enchance <target> [output_path] [options]
 ### Output destination
 
 When you run `image-enchance`:
-- **Without an output argument:** The enhanced file is saved directly in the
-  current working directory from which you invoked the command (`pwd`), using
-  the pattern `<stem>_enhanced.<ext>`. The terminal prints the absolute path
-  (`Saved: /path/to/...`) upon completion.
+- **Without an output argument:** The enhanced file is automatically saved in the
+  same directory as the source image (or in the current working directory for
+  remote web URLs), using the pattern `<stem>_enhanced.<ext>`. The terminal prints
+  the absolute path (`Saved: /path/to/...`) upon completion.
 - **With an explicit destination:** If you provide a second argument, the output
   is written to that exact file path or directory.
 

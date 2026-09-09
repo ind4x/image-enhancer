@@ -30,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   GFPGAN face restoration.
 - Refactored `super_resolution.py` to broadcast progress state before and after
   tile processing.
+- Configured default destination for single-image CLI commands to automatically
+  save into the source image's parent directory rather than the terminal working
+  directory.
 - Updated documentation across `docs/` and `README.md` to reflect direct command
   usage, URL fetching, and GPU acceleration.
 
