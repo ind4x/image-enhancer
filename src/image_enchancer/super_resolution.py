@@ -106,6 +106,9 @@ class SuperResolutionEngine:
                     x = x_idx * tile_size
                     x_end = min(x + tile_size, w)
 
+                    if progress_callback:
+                        progress_callback(current_tile, total_tiles, f"Processing tile {current_tile + 1}/{total_tiles}")
+
                     # Extract tile with contextual boundary padding
                     y_pad_start = max(0, y - tile_pad)
                     y_pad_end = min(h, y_end + tile_pad)
@@ -129,7 +132,7 @@ class SuperResolutionEngine:
 
                     current_tile += 1
                     if progress_callback:
-                        progress_callback(current_tile, total_tiles)
+                        progress_callback(current_tile, total_tiles, f"Completed tile {current_tile}/{total_tiles}")
 
             upscaled = upscaled / np.maximum(weight_canvas, 1e-7)
             upscaled = np.clip(upscaled, 0.0, 255.0).astype(np.uint8)

@@ -235,16 +235,18 @@ def run_enhance_pipeline(
 
         with Progress(
             SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
+            TextColumn("[bold cyan]{task.description}[/]"),
             BarColumn(),
+            TextColumn("[bold green]{task.percentage:>3.0f}%[/]"),
             TimeElapsedColumn(),
             console=console,
         ) as progress:
-            task = progress.add_task(f"Enhancing {display_name}", total=100)
+            task = progress.add_task(f"Preparing {display_name}...", total=100)
 
-            def update_progress(completed: int, total: int):
+            def update_progress(completed: int, total: int, status_text: str = ""):
                 pct = int((completed / max(total, 1)) * 100)
-                progress.update(task, completed=pct)
+                desc = status_text if status_text else f"Tile {completed}/{total}"
+                progress.update(task, completed=pct, description=desc)
 
             try:
                 telemetry = pipeline.process_file(
@@ -252,7 +254,7 @@ def run_enhance_pipeline(
                     output_path=dest_file,
                     progress_callback=update_progress,
                 )
-                progress.update(task, completed=100)
+                progress.update(task, completed=100, description=f"Finalizing {display_name}...")
 
                 w_orig, h_orig = telemetry["original_dimensions"]
                 w_out, h_out = telemetry["output_dimensions"]
