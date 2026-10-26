@@ -145,4 +145,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Author
 
 - **Author:** Youssef Fellah ([ind4x_](https://github.com/ind4x))
-- **Institution:** Mundiapolis University, Engineering Cycle
